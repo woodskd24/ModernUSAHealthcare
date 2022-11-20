@@ -1,0 +1,15 @@
+library(tidyr)
+library(dplyr)
+library(readr)
+library(readxl)
+library(tibble)
+library(writexl)
+library(stringr)
+MH <- read_excel("C:/Users/woodsk1/Downloads/MHC4.xlsx")
+Indicator = filter(MH, Indicator == "Needed Counseling or Therapy But Did Not Get It, Last 4 Weeks")
+Age = filter(Indicator, Group == "By Age")
+MH4 <- Age %>% filter(grepl('2022', Time))
+rep_str = c('.*Jan.*'='Jan','.*Feb.*'='Feb', '.*Mar.*'='Mar', '.*Apr.*'='Apr')
+MH4$Time <- str_replace_all(MH4$Time, rep_str)
+
+

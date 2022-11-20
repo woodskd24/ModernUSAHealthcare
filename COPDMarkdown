@@ -1,0 +1,63 @@
+---
+title: "COPD Analysis"
+output: html_document
+---
+
+```{r}
+#Install/Load Packages & Files
+packages <- c('markdown',"epitools", "ggplot2", "readxl", "dplyr", "tidyr", "knitr", "lubridate", "MASS", "summarytools", "magrittr", "tidyverse")
+#install.packages(packages)
+
+#Load Libraries
+lapply(packages, require, character.only = TRUE)
+```
+
+```{r}
+#Load Data
+COPD <- read_excel("C:/Users/Kelsey/Downloads/COPD.xlsx")
+descr(COPD)
+```
+```{r}
+#Barplot of severity
+barplot(table(COPD$COPDSEVERITY))
+#Barplot of Age
+boxplot(COPD$AGE, horizontal = TRUE, main="Age Distribution forf COPD Dataset", xlab="Years")
+```
+```{r}
+#Age by severity
+Age <- ggplot(COPD, aes(x=AGE, col=COPDSEVERITY)) + geom_density()
+Age
+```
+```{r}
+#Severity by Gender
+ggplot(COPD, aes(x=gender, fill=COPDSEVERITY)) + geom_bar(position="dodge")
+```
+```{r}
+#Severity by COPD
+ggplot(COPD, aes(x=copd, fill=COPDSEVERITY)) + geom_bar(position="dodge")
+```
+```{r}
+#Severity by smoking
+ggplot(COPD, aes(x=smoking, fill=COPDSEVERITY)) + geom_bar(position="dodge")
+```
+```{r}
+#Severity by AFib
+ggplot(COPD, aes(x=AtrialFib, fill=COPDSEVERITY)) + geom_bar(position="dodge")
+```
+```{r}
+#Severity by AFib
+ggplot(COPD, aes(x=hypertension, fill=COPDSEVERITY)) + geom_bar(position="dodge")
+```
+```{r}
+#Logistic Regression
+mylogit <- glm(copd ~ smoking + gender + Diabetes + AtrialFib + hypertension, data = COPD)
+summary(mylogit)
+```
+```{r}
+## CIs using standard errors
+confint.default(mylogit)
+```
+```{r}
+## odds ratios and 95% CI
+exp(cbind(OR = coef(mylogit), confint(mylogit)))
+```
